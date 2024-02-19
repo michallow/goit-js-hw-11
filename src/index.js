@@ -1,6 +1,7 @@
-const axios = require('axios').default;
 import axios from 'axios';
 import Notiflix from 'notiflix';
+
+// const axios = require('axios').default;
 
 const url = '';
 const genuineQueryString = queryString.split(' ').join('+');
