@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page title</title>
 
-    <script type="module" src="./index.js"></script>
+    <script type="module" src="index.js" defer></script>
   </head>
 
   <body>
@@ -16,25 +16,15 @@
         name="searchQuery"
         autocomplete="off"
         placeholder="Search images..."
+        data-search
       />
       <button type="submit">Search</button>
     </form>
     
-    <div class="photo-card">
-      <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" loading="lazy" />
-      <div class="info">
-        <p class="info-item">
-          <b>Likes</b>
-        </p>
-        <p class="info-item">
-          <b>Views</b>
-        </p>
-        <p class="info-item">
-          <b>Comments</b>
-        </p>
-        <p class="info-item">
-          <b>Downloads</b>
-        </p>
+    <div class="gallery">
+<div class="photo-card">
+
+</div>
       </div>
     </div>
 
