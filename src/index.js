@@ -27,21 +27,17 @@ searchForm.addEventListener('submit', async event => {
 
 loadMoreBtn.addEventListener('click', async () => {
   try {
-    const { photos, totalHits } = await fetchPhotos(queryString);
-    if (photos.length < totalHits) {
-      currentPage++;
-      renderPhotos({ photos, totalHits });
-    } else {
-      console.log('No more photos to load');
-    }
+    currentPage++;
+    const { photos, totalHits } = await fetchPhotos(queryString, currentPage);
+    renderPhotos({ photos, totalHits });
   } catch (error) {
     console.log(error);
   }
 });
 
-async function fetchPhotos(searchTerm) {
+async function fetchPhotos(searchTerm, page) {
   const response = await axios.get(
-    `${BASE_URL}?key=${API_KEY}&q=${searchTerm}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${perPage}&page=${currentPage}`
+    `${BASE_URL}?key=${API_KEY}&q=${searchTerm}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${perPage}&page=${page}`
   );
   return {
     photos: response.data.hits,
