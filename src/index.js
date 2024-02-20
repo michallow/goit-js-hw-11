@@ -4,13 +4,20 @@ import Notiflix from 'notiflix';
 const API_KEY = '42458788-a8c12bb6253815950dff0c06c';
 const BASE_URL = 'https://pixabay.com/api/';
 let queryString = '';
+let currentPage = 1;
+const perPage = 20;
 
 const photoCard = document.querySelector('.photo-card');
+const searchForm = document.querySelector('.search-form');
 const searchInput = document.querySelector('[data-search]');
+const loadMoreBtn = document.querySelector('.load-more');
 
-searchInput.addEventListener('input', async event => {
-  queryString = event.target.value.split(' ').join('+');
+searchForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  clearPhotoCard();
+  queryString = searchInput.value.trim().split(' ').join('+');
   try {
+    currentPage = 1;
     const photos = await fetchPhotos(queryString);
     renderPhotos(photos);
   } catch (error) {
@@ -18,14 +25,32 @@ searchInput.addEventListener('input', async event => {
   }
 });
 
+loadMoreBtn.addEventListener('click', async () => {
+  try {
+    const { photos, totalHits } = await fetchPhotos(queryString);
+    if (photos.length < totalHits) {
+      currentPage++;
+      renderPhotos({ photos, totalHits });
+    } else {
+      console.log('No more photos to load');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 async function fetchPhotos(searchTerm) {
   const response = await axios.get(
-    `${BASE_URL}?key=${API_KEY}&q=${searchTerm}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=1`
+    `${BASE_URL}?key=${API_KEY}&q=${searchTerm}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${perPage}&page=${currentPage}`
   );
-  return response.data.hits;
+  return {
+    photos: response.data.hits,
+    totalHits: response.data.totalHits,
+  };
 }
 
-function renderPhotos(photos) {
+function renderPhotos(data) {
+  const photos = data.photos;
   const markup = photos
     .map(
       ({
@@ -52,9 +77,9 @@ function renderPhotos(photos) {
     )
     .join('');
 
-  photoCard.innerHTML = markup;
+  photoCard.insertAdjacentHTML('beforeend', markup);
 }
 
-function fetchMoreImages() {
-    
+async function clearPhotoCard() {
+  photoCard.innerHTML = '';
 }
