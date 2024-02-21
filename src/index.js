@@ -32,7 +32,11 @@ searchForm.addEventListener('submit', async event => {
     currentPage = 1;
     const photos = await fetchPhotos(queryString);
     renderPhotos(photos);
-    showLoadMoreBtn();
+    if (photos.length === 0 || photos.length === undefined) {
+      hideLoadMoreBtn();
+    } else {
+      showLoadMoreBtn();
+    }
   } catch (error) {
     console.log(error);
   }
@@ -59,10 +63,21 @@ async function fetchPhotos(searchTerm, page) {
   const response = await axios.get(
     `${BASE_URL}?key=${API_KEY}&q=${searchTerm}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${perPage}&page=${page}`
   );
+
   const totalHits = response.data.totalHits;
-  console.log(`Hooray! We found ${totalHits} images.`);
   const photos = response.data.hits;
   const totalPages = Math.ceil(totalHits / perPage);
+
+  if (photos.length === 0) {
+    Notiflix.Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+    hideLoadMoreBtn();
+  } else {
+    console.log(`Hooray! We found ${totalHits} images.`);
+    showLoadMoreBtn();
+  }
+
   return {
     photos,
     totalHits,
