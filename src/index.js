@@ -30,32 +30,27 @@ searchForm.addEventListener('submit', async event => {
   queryString = searchInput.value.trim().split(' ').join('+');
   try {
     currentPage = 1;
-    const photos = await fetchPhotos(queryString);
-    renderPhotos(photos);
-    if (photos.length === 0 || photos.length === undefined) {
-      hideLoadMoreBtn();
-    } else {
-      showLoadMoreBtn();
-    }
+    const { photos, totalHits, totalPages } = await fetchPhotos(
+      queryString,
+      currentPage
+    );
+    renderPhotos({ photos, totalHits });
+    showLoadMoreBtn();
   } catch (error) {
     console.log(error);
   }
 });
 
 loadMoreBtn.addEventListener('click', async () => {
+  currentPage++;
   try {
-    currentPage++;
     const { photos, totalHits, totalPages } = await fetchPhotos(
       queryString,
       currentPage
     );
-    if (currentPage <= totalPages) {
-      renderPhotos({ photos, totalHits });
-    } else {
-      console.log("We're sorry, but you've reached the end of search results.");
-    }
+    renderPhotos({ photos, totalHits });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 });
 
@@ -68,21 +63,22 @@ async function fetchPhotos(searchTerm, page) {
   const photos = response.data.hits;
   const totalPages = Math.ceil(totalHits / perPage);
 
-  if (photos.length === 0) {
+  if (totalHits === 0) {
     Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
-    hideLoadMoreBtn();
-  } else {
-    console.log(`Hooray! We found ${totalHits} images.`);
-    showLoadMoreBtn();
+    throw new Error('No results found');
   }
 
-  return {
-    photos,
-    totalHits,
-    totalPages,
-  };
+  if (page > totalPages) {
+    Notiflix.Notify.failure(
+      "We're sorry, but you've reached the end of search results."
+    );
+    throw new Error('No more results');
+  }
+
+  console.log(`Hooray! We found ${totalHits} images.`);
+  return { photos, totalHits, totalPages };
 }
 
 function renderPhotos(data) {
