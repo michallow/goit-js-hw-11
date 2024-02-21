@@ -1,5 +1,7 @@
 import axios from 'axios';
 import Notiflix from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const API_KEY = '42458788-a8c12bb6253815950dff0c06c';
 const BASE_URL = 'https://pixabay.com/api/';
@@ -12,6 +14,16 @@ const searchForm = document.querySelector('.search-form');
 const searchInput = document.querySelector('[data-search]');
 const loadMoreBtn = document.querySelector('.load-more');
 
+const hideLoadMoreBtn = () => {
+  loadMoreBtn.style.display = 'none';
+};
+
+const showLoadMoreBtn = () => {
+  loadMoreBtn.style.display = 'block';
+};
+
+hideLoadMoreBtn();
+
 searchForm.addEventListener('submit', async event => {
   event.preventDefault();
   clearPhotoCard();
@@ -20,6 +32,7 @@ searchForm.addEventListener('submit', async event => {
     currentPage = 1;
     const photos = await fetchPhotos(queryString);
     renderPhotos(photos);
+    showLoadMoreBtn();
   } catch (error) {
     console.log(error);
   }
@@ -28,8 +41,15 @@ searchForm.addEventListener('submit', async event => {
 loadMoreBtn.addEventListener('click', async () => {
   try {
     currentPage++;
-    const { photos, totalHits } = await fetchPhotos(queryString, currentPage);
-    renderPhotos({ photos, totalHits });
+    const { photos, totalHits, totalPages } = await fetchPhotos(
+      queryString,
+      currentPage
+    );
+    if (currentPage <= totalPages) {
+      renderPhotos({ photos, totalHits });
+    } else {
+      console.log("We're sorry, but you've reached the end of search results.");
+    }
   } catch (error) {
     console.log(error);
   }
@@ -39,9 +59,14 @@ async function fetchPhotos(searchTerm, page) {
   const response = await axios.get(
     `${BASE_URL}?key=${API_KEY}&q=${searchTerm}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${perPage}&page=${page}`
   );
+  const totalHits = response.data.totalHits;
+  console.log(`Hooray! We found ${totalHits} images.`);
+  const photos = response.data.hits;
+  const totalPages = Math.ceil(totalHits / perPage);
   return {
-    photos: response.data.hits,
-    totalHits: response.data.totalHits,
+    photos,
+    totalHits,
+    totalPages,
   };
 }
 
