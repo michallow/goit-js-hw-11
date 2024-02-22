@@ -34,6 +34,7 @@ searchForm.addEventListener('submit', async event => {
       queryString,
       currentPage
     );
+    Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
     renderPhotos({ photos, totalHits });
     showLoadMoreBtn();
   } catch (error) {
@@ -77,9 +78,22 @@ async function fetchPhotos(searchTerm, page) {
     throw new Error('No more results');
   }
 
-  console.log(`Hooray! We found ${totalHits} images.`);
   return { photos, totalHits, totalPages };
 }
+
+const lightbox = new SimpleLightbox('.photo-card a', {
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 250,
+});
+
+lightbox.on('show.simplelightbox', function () {
+  lightbox.load();
+});
+
+lightbox.on('show.simplelightbox', function () {
+  lightbox.load();
+});
 
 function renderPhotos(data) {
   const photos = data.photos;
@@ -95,7 +109,7 @@ function renderPhotos(data) {
         downloads,
       }) => `
     <div class="photo-card">
-      <a href="${largeImageURL}">
+      <a href="${largeImageURL}" data-lightbox="gallery">
         <img src="${webformatURL}" alt="${tags}" loading="lazy" />
       </a>
       <div class="info">
@@ -110,6 +124,7 @@ function renderPhotos(data) {
     .join('');
 
   photoCard.insertAdjacentHTML('beforeend', markup);
+  lightbox.refresh();
 }
 
 async function clearPhotoCard() {
