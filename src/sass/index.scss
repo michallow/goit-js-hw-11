@@ -2,28 +2,45 @@
 @import './example';
 
 body {
-  overflow-x: hidden; /* Uniemożliwienie przewijania w poziomie */
+  overflow-x: hidden;
 }
 
 .gallery {
-  display: flex; /* Ustawienie galerii na kontener flexbox */
-  flex-wrap: wrap; /* Zdjęcia zawijane do nowego wiersza, jeśli zabraknie miejsca */
-  justify-content: space-between; /* Rozłożenie elementów równomiernie na szerokość kontenera */
-  align-items: center;
-  gap: 0;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 30px;
 }
 
 .photo-card-template {
-  width: calc(33.33% - 20px); /* 33.33% szerokości kontenera minus odstęp */
-  margin: 0; /* Usunięcie marginesów */
-  display: inline-block; /* Zdjęcia ustawiają się obok siebie */
-  vertical-align: top; /* Ustawienie do góry dla prawidłowego wyświetlania wierszy */
-  height: 350px; /* Stała wysokość kontenera */
-  overflow: hidden; /* Ukrycie elementów, które wychodzą poza kontener */
+  width: calc(33.33% - 20px);
+  margin: 0;
+  display: inline-block;
+  vertical-align: top;
+  height: 350px;
+  border: solid 1px;
+  margin: 5px;
+  box-shadow: 2px 0 10px grey;
+  // overflow: hidden;
 }
 
 .photo-card-template img {
-  width: 100%; /* Obrazek wypełnia całą dostępną szerokość kontenera */
-  height: 100%; /* Obrazek wypełnia całą wysokość kontenera */
-  object-fit: cover; /* Dopasowanie obrazka do wymiarów kontenera, zachowując proporcje */
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+  transition: transform 3s ease-in-out;
+}
+
+.photo-card-template img:hover {
+  transform: scale(1.1);
+}
+
+.photo-card-template .info {
+  display: flex;
+  justify-content: space-around;
+  margin: 0 auto;
+}
+
+.photo-card-template .info-item {
+  text-align: center;
 }
