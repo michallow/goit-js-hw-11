@@ -104,7 +104,7 @@ function renderPhotos(data) {
         comments,
         downloads,
       }) => `
-    <div class="photo-card">
+    <div class="photo-card-template">
       <a href="${largeImageURL}" data-lightbox="gallery">
         <img src="${webformatURL}" alt="${tags}" loading="lazy" />
       </a>
@@ -121,6 +121,7 @@ function renderPhotos(data) {
 
   photoCard.insertAdjacentHTML('beforeend', markup);
   lightbox.refresh();
+  showLoadMoreBtn();
   smoothScroll(cardHeight * 2);
 }
 

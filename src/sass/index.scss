@@ -1,18 +1,29 @@
-.photo-card-container {
-  display: flex;
-  flex-wrap: wrap; /* Zdjęcia będą zawijane do nowego wiersza, jeśli zabraknie miejsca */
+@import './common';
+@import './example';
+
+body {
+  overflow-x: hidden; /* Uniemożliwienie przewijania w poziomie */
+}
+
+.gallery {
+  display: flex; /* Ustawienie galerii na kontener flexbox */
+  flex-wrap: wrap; /* Zdjęcia zawijane do nowego wiersza, jeśli zabraknie miejsca */
   justify-content: space-between; /* Rozłożenie elementów równomiernie na szerokość kontenera */
-  gap: 20px; /* Odstęp między zdjęciami */
+  align-items: center;
+  gap: 0;
 }
 
-.photo-card {
-  width: calc(
-    25% - 10px
-  ); /* 25% szerokości kontenera minus odstęp między zdjęciami */
-  flex-grow: 1; /* Zdjęcia równomiernie zajmują dostępną przestrzeń */
+.photo-card-template {
+  width: calc(33.33% - 20px); /* 33.33% szerokości kontenera minus odstęp */
+  margin: 0; /* Usunięcie marginesów */
+  display: inline-block; /* Zdjęcia ustawiają się obok siebie */
+  vertical-align: top; /* Ustawienie do góry dla prawidłowego wyświetlania wierszy */
+  height: 350px; /* Stała wysokość kontenera */
+  overflow: hidden; /* Ukrycie elementów, które wychodzą poza kontener */
 }
 
-.photo-card img {
-  width: 100%; /* Zdjęcia wypełniają całą szerokość karty */
-  height: auto; /* Automatyczne dopasowanie wysokości */
+.photo-card-template img {
+  width: 100%; /* Obrazek wypełnia całą dostępną szerokość kontenera */
+  height: 100%; /* Obrazek wypełnia całą wysokość kontenera */
+  object-fit: cover; /* Dopasowanie obrazka do wymiarów kontenera, zachowując proporcje */
 }
