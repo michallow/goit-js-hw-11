@@ -1,2 +1,18 @@
-@import './common';
-@import './example';
+.photo-card-container {
+  display: flex;
+  flex-wrap: wrap; /* Zdjęcia będą zawijane do nowego wiersza, jeśli zabraknie miejsca */
+  justify-content: space-between; /* Rozłożenie elementów równomiernie na szerokość kontenera */
+  gap: 20px; /* Odstęp między zdjęciami */
+}
+
+.photo-card {
+  width: calc(
+    25% - 10px
+  ); /* 25% szerokości kontenera minus odstęp między zdjęciami */
+  flex-grow: 1; /* Zdjęcia równomiernie zajmują dostępną przestrzeń */
+}
+
+.photo-card img {
+  width: 100%; /* Zdjęcia wypełniają całą szerokość karty */
+  height: auto; /* Automatyczne dopasowanie wysokości */
+}

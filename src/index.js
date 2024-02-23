@@ -91,10 +91,6 @@ lightbox.on('show.simplelightbox', function () {
   lightbox.load();
 });
 
-lightbox.on('show.simplelightbox', function () {
-  lightbox.load();
-});
-
 function renderPhotos(data) {
   const photos = data.photos;
   const markup = photos
@@ -125,6 +121,17 @@ function renderPhotos(data) {
 
   photoCard.insertAdjacentHTML('beforeend', markup);
   lightbox.refresh();
+  smoothScroll(cardHeight * 2);
+}
+
+async function smoothScroll(scrollAmount) {
+  await new Promise(resolve => {
+    window.scrollBy({
+      top: scrollAmount,
+      behavior: 'smooth',
+    });
+    setTimeout(resolve, 1000); // Opóźnienie wykonania kolejnej akcji
+  });
 }
 
 async function clearPhotoCard() {
