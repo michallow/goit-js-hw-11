@@ -7,7 +7,7 @@ const API_KEY = '42458788-a8c12bb6253815950dff0c06c';
 const BASE_URL = 'https://pixabay.com/api/';
 let queryString = '';
 let currentPage = 1;
-const perPage = 20;
+const perPage = 40;
 
 const photoCard = document.querySelector('.photo-card');
 const searchForm = document.querySelector('.search-form');
@@ -27,7 +27,18 @@ hideLoadMoreBtn();
 searchForm.addEventListener('submit', async event => {
   event.preventDefault();
   clearPhotoCard();
-  queryString = searchInput.value.trim().split(' ').join('+');
+  queryString = searchInput.value.trim();
+
+  if (
+    queryString === '' ||
+    queryString === ' ' ||
+    !queryString.replace(/\s/g, '').length
+  ) {
+    Notiflix.Notify.info(`Please enter your search term.`);
+    return;
+  }
+
+  queryString = queryString.split(' ').join('+');
   try {
     currentPage = 1;
     const { photos, totalHits, totalPages } = await fetchPhotos(
@@ -75,6 +86,7 @@ async function fetchPhotos(searchTerm, page) {
     Notiflix.Notify.failure(
       "We're sorry, but you've reached the end of search results."
     );
+    hideLoadMoreBtn();
     throw new Error('No more results');
   }
 
