@@ -143,10 +143,11 @@ async function smoothScroll(scrollAmount) {
       top: scrollAmount,
       behavior: 'smooth',
     });
-    setTimeout(resolve, 1000); // Opóźnienie wykonania kolejnej akcji
+    setTimeout(resolve, 1000);
   });
 }
 
 async function clearPhotoCard() {
   photoCard.innerHTML = '';
-}
+};
+
